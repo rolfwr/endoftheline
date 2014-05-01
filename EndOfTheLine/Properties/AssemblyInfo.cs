@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("EndOfTheLine")]
-[assembly: AssemblyDescription("EndOfTheLine is a Visual Studio extension that shows end of line markers in text editor allowing users to differenciate between CRLF and LF line endings.")]
+[assembly: AssemblyDescription("EndOfTheLine is a Visual Studio extension that shows end of line markers in text editor allowing users to differentiate between CRLF and LF line endings.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Rolf W. Rasmussen")]
 [assembly: AssemblyProduct("End of the Line")]

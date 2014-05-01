@@ -3,7 +3,7 @@
   <Metadata>
     <Identity Id="EndOfTheLine..44e069cf-8802-4347-bbad-5e48b881efe0" Version="1.0" Language="en-US" Publisher="Rolf W. Rasmussen" />
     <DisplayName>End of the Line</DisplayName>
-    <Description xml:space="preserve">Shows end of line markers in text editor allowing users to differenciate between CRLF and LF line endings.</Description>
+    <Description xml:space="preserve">Shows end of line markers in text editor allowing users to differentiate between CRLF and LF line endings.</Description>
     <License>license.txt</License>
     <Icon>Eol-icon.png</Icon>
     <PreviewImage>Eol-preview.png</PreviewImage>
