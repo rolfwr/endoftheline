@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Formatting;
 
-namespace EolAdornment
+namespace EndOfTheLine
 {
     ///<summary>
     /// EolAdornment places end of line markers at the end of each line.

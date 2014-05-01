@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Utilities;
 
-namespace EolAdornment
+namespace EndOfTheLine
 {
      /// <summary>
     /// Define an <see cref="IAdornmentLayer" /> for end of line markers which
