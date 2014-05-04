@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Collections;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -87,16 +88,9 @@ namespace EndOfTheLine
             }
         }
 
-        private IWpfTextViewLine GetLineAbove(ITextViewLine first)
+        private ITextViewLine GetLineAbove(ITextViewLine first)
         {
-            IWpfTextViewLine aboveLine = null;
-            var above = view.TextViewLines.IndexOf(first) - 1;
-            if (above > 0)
-            {
-                aboveLine = view.TextViewLines[above];
-                CreateVisuals(aboveLine);
-            }
-            return aboveLine;
+            return ListItems.PreviousItemOrDefault(view.TextViewLines, first);
         }
 
         /// <summary>

@@ -3,3 +3,4 @@
 \.DotSettings$
 /bin$
 /obj$
+^packages$
