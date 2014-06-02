@@ -32,8 +32,7 @@ namespace EndOfTheLine
         public void TextViewCreated(IWpfTextView textView)
         {
             var options = EditorOptionsFactoryService.GetOptions(textView);
-            var adornment = new EolAdornment(textView, options, FormatMapService);
-            textView.Closed += (sender, args) => adornment.Close();
+            EolAdornment.Attach(textView, options, FormatMapService);
         }
 
         [Import]

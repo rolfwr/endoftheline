@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using System;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -16,14 +16,20 @@ namespace EndOfTheLine
     ///</summary>
     public class EolAdornment
     {
-        readonly IAdornmentLayer layer;
-        readonly IWpfTextView view;
+        private readonly IAdornmentLayer layer;
+        private readonly IWpfTextView view;
         private readonly IEditorOptions options;
-        private Brush whitespaceBrush;
         private readonly IEditorFormatMap formatMap;
+        private Brush whitespaceBrush;
         private bool visible;
 
-        public EolAdornment(IWpfTextView view, IEditorOptions options, IEditorFormatMapService formatMapService)
+        public static void Attach(IWpfTextView view, IEditorOptions options, IEditorFormatMapService formatMapService)
+        {
+            var adornment = new EolAdornment(view, options, formatMapService);
+            view.Closed += adornment.OnClosed;
+        }
+
+        private EolAdornment(IWpfTextView view, IEditorOptions options, IEditorFormatMapService formatMapService)
         {
             this.view = view;
             layer = view.GetAdornmentLayer("EolAdornment");
@@ -36,20 +42,20 @@ namespace EndOfTheLine
 
             ReadWhitespaceBrushSetting();
 
-            // Listen to any event that may require us to apply end of line
-            // markers.
-            this.view.LayoutChanged += OnLayoutChanged;
-
             Visible = options.IsVisibleWhitespaceEnabled();
         }
 
-        public void Close()
+        private void OnClosed(object sender, EventArgs args)
         {
+            view.Closed -= OnClosed;
             options.OptionChanged -= OnOptionChanged;
-            view.LayoutChanged -= OnLayoutChanged;
+            if (Visible)
+            {
+                view.LayoutChanged -= OnLayoutChanged;
+            }
         }
 
-        public bool Visible
+        private bool Visible
         {
             get { return visible; }
             set
@@ -68,10 +74,7 @@ namespace EndOfTheLine
                     view.LayoutChanged += OnLayoutChanged;
                     if (view.TextViewLines != null)
                     {
-                        foreach (var line in view.TextViewLines)
-                        {
-                            CreateVisuals(line);
-                        }
+                        CreateVisuals();
                     }
                     visible = true;
                 }
@@ -81,7 +84,10 @@ namespace EndOfTheLine
         private void OnOptionChanged(object sender, EditorOptionChangedEventArgs e)
         {
             if (e.OptionId != DefaultTextViewOptions.UseVisibleWhitespaceId.Name)
+            {
                 return;
+            }
+
             Visible = options.IsVisibleWhitespaceEnabled();
         }
 
@@ -100,16 +106,15 @@ namespace EndOfTheLine
 
             ReadWhitespaceBrushSetting();
 
-            if (!visible)
+            if (!Visible)
             {
                 return;
             }
 
+            layer.RemoveAllAdornments();
+
             // Recreate adornments for all lines in the view.
-            foreach (var line in view.TextViewLines)
-            {
-                CreateVisuals(line);
-            }
+            CreateVisuals();
         }
 
         /// <summary>
@@ -124,7 +129,7 @@ namespace EndOfTheLine
 
             foreach (var line in e.NewOrReformattedLines)
             {
-                CreateVisuals(line);
+                CreateLineVisuals(line);
             }
 
             // When pressing enter on an empty line VS2013 removes the
@@ -139,7 +144,7 @@ namespace EndOfTheLine
             var aboveLine = GetLineAbove(e.NewOrReformattedLines[0]);
             if (aboveLine != null)
             {
-                CreateVisuals(aboveLine);
+                CreateLineVisuals(aboveLine);
             }
         }
 
@@ -148,10 +153,18 @@ namespace EndOfTheLine
             return ListItems.PreviousItemOrDefault(view.TextViewLines, first);
         }
 
+        private void CreateVisuals()
+        {
+            foreach (var line in view.TextViewLines)
+            {
+                CreateLineVisuals(line);
+            }
+        }
+
         /// <summary>
         /// Within the given line add the scarlet box behind the a
         /// </summary>
-        private void CreateVisuals(ITextViewLine line)
+        private void CreateLineVisuals(ITextViewLine line)
         {
             var lineBreak = new SnapshotSpan(view.TextSnapshot, Span.FromBounds(line.End, line.EndIncludingLineBreak));
             var markerGeom = view.TextViewLines.GetMarkerGeometry(lineBreak);
@@ -180,12 +193,6 @@ namespace EndOfTheLine
 
             Canvas.SetLeft(adornment, markerGeom.Bounds.Left);
             Canvas.SetTop(adornment, markerGeom.Bounds.Top);
-
-            // Normally previous adornments are automatically removed when
-            // lines are reformatted. However, we are applying new updated
-            // adornments when the font settings change. In this case the
-            // old adornments remain, and must be removed.
-            layer.RemoveAdornmentsByVisualSpan(lineBreak);
 
             layer.AddAdornment(AdornmentPositioningBehavior.TextRelative, lineBreak, null, adornment, null);
         }
