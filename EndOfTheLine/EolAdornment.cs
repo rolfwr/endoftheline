@@ -6,6 +6,7 @@ using System.Windows.Media;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Editor;
+using Microsoft.VisualStudio.Text.Editor.OptionsExtensionMethods;
 using Microsoft.VisualStudio.Text.Formatting;
 
 namespace EndOfTheLine
@@ -17,13 +18,18 @@ namespace EndOfTheLine
     {
         readonly IAdornmentLayer layer;
         readonly IWpfTextView view;
+        private readonly IEditorOptions options;
         private Brush whitespaceBrush;
         private readonly IEditorFormatMap formatMap;
+        private bool visible;
 
-        public EolAdornment(IWpfTextView view, IEditorFormatMapService formatMapService)
+        public EolAdornment(IWpfTextView view, IEditorOptions options, IEditorFormatMapService formatMapService)
         {
             this.view = view;
             layer = view.GetAdornmentLayer("EolAdornment");
+
+            this.options = options;
+            options.OptionChanged += OnOptionChanged;
 
             formatMap = formatMapService.GetEditorFormatMap(this.view);
             formatMap.FormatMappingChanged += FormatMapOnFormatMappingChanged;
@@ -33,11 +39,50 @@ namespace EndOfTheLine
             // Listen to any event that may require us to apply end of line
             // markers.
             this.view.LayoutChanged += OnLayoutChanged;
+
+            Visible = options.IsVisibleWhitespaceEnabled();
         }
 
         public void Close()
         {
+            options.OptionChanged -= OnOptionChanged;
             view.LayoutChanged -= OnLayoutChanged;
+        }
+
+        public bool Visible
+        {
+            get { return visible; }
+            set
+            {
+                if (value == visible)
+                    return;
+
+                if (!value)
+                {
+                    view.LayoutChanged -= OnLayoutChanged;
+                    layer.RemoveAllAdornments();
+                    visible = false;
+                }
+                else
+                {
+                    view.LayoutChanged += OnLayoutChanged;
+                    if (view.TextViewLines != null)
+                    {
+                        foreach (var line in view.TextViewLines)
+                        {
+                            CreateVisuals(line);
+                        }
+                    }
+                    visible = true;
+                }
+            }
+        }
+
+        private void OnOptionChanged(object sender, EditorOptionChangedEventArgs e)
+        {
+            if (e.OptionId != DefaultTextViewOptions.UseVisibleWhitespaceId.Name)
+                return;
+            Visible = options.IsVisibleWhitespaceEnabled();
         }
 
         private void ReadWhitespaceBrushSetting()
@@ -54,7 +99,12 @@ namespace EndOfTheLine
             }
 
             ReadWhitespaceBrushSetting();
-            
+
+            if (!visible)
+            {
+                return;
+            }
+
             // Recreate adornments for all lines in the view.
             foreach (var line in view.TextViewLines)
             {
@@ -67,6 +117,11 @@ namespace EndOfTheLine
         /// </summary>
         private void OnLayoutChanged(object sender, TextViewLayoutChangedEventArgs e)
         {
+            if (!visible)
+            {
+                return;
+            }
+
             foreach (var line in e.NewOrReformattedLines)
             {
                 CreateVisuals(line);
