@@ -12,6 +12,9 @@ visualize line break characters such as carrage returns (CR) and line feeds
 it will CR and LF characters as ¤ and ¶ respectively using the same font style
 as Visual Studio displays spaces and tabs in.
 
+After installing the extension be sure to enable "View White Space" (Ctrl+R,
+Ctrl+W) to see the end of line markers in the text editor.
+
 Sources of inconsistent line endings
 ------------------------------------
 
