@@ -36,7 +36,7 @@ namespace EndOfTheLine
         }
 
         [Import]
-        internal IEditorFormatMapService FormatMapService = null;
+        internal IEditorFormatMapService FormatMapService;
 
         [Import]
         internal IEditorOptionsFactoryService EditorOptionsFactoryService;
