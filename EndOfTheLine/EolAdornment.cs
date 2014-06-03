@@ -1,49 +1,94 @@
-﻿using System.Collections;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows.Media;
-using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Editor;
-using Microsoft.VisualStudio.Text.Formatting;
+using Microsoft.VisualStudio.Text.Editor.OptionsExtensionMethods;
 
 namespace EndOfTheLine
 {
     ///<summary>
-    /// EolAdornment places end of line markers at the end of each line.
+    /// EolAdornment listens to editor state to determine when to add and
+    /// remove end of line markers in an adorned text view.
     ///</summary>
     public class EolAdornment
     {
-        readonly IAdornmentLayer layer;
-        readonly IWpfTextView view;
-        private Brush whitespaceBrush;
+        private readonly IEditorOptions options;
         private readonly IEditorFormatMap formatMap;
+        private bool visible;
+        private readonly EolAdornedTextView adornedTextView;
 
-        public EolAdornment(IWpfTextView view, IEditorFormatMapService formatMapService)
+        internal static void Attach(IWpfTextView view, IEditorOptions options, IEditorFormatMapService formatMapService)
         {
-            this.view = view;
-            layer = view.GetAdornmentLayer("EolAdornment");
+            var textView = new EolAdornedTextView(view, view.GetAdornmentLayer("EolAdornment"));
+            var adornment = new EolAdornment(options, formatMapService, textView);
+            view.Closed += adornment.OnClosed;
+        }
 
-            formatMap = formatMapService.GetEditorFormatMap(this.view);
+        private EolAdornment(IEditorOptions options, IEditorFormatMapService formatMapService, EolAdornedTextView textView)
+        {
+            adornedTextView = textView;
+            this.options = options;
+            options.OptionChanged += OnOptionChanged;
+
+            formatMap = formatMapService.GetEditorFormatMap(adornedTextView.View);
             formatMap.FormatMappingChanged += FormatMapOnFormatMappingChanged;
 
             ReadWhitespaceBrushSetting();
 
-            // Listen to any event that may require us to apply end of line
-            // markers.
-            this.view.LayoutChanged += OnLayoutChanged;
+            Visible = options.IsVisibleWhitespaceEnabled();
         }
 
-        public void Close()
+        private void OnClosed(object sender, EventArgs args)
         {
-            view.LayoutChanged -= OnLayoutChanged;
+            adornedTextView.View.Closed -= OnClosed;
+            options.OptionChanged -= OnOptionChanged;
+            if (Visible)
+            {
+                adornedTextView.View.LayoutChanged -= OnLayoutChanged;
+            }
+        }
+
+        private bool Visible
+        {
+            get { return visible; }
+            set
+            {
+                if (value == visible)
+                    return;
+
+                if (!value)
+                {
+                    adornedTextView.View.LayoutChanged -= OnLayoutChanged;
+                    adornedTextView.RemoveAllAdornments();
+                    visible = false;
+                }
+                else
+                {
+                    adornedTextView.View.LayoutChanged += OnLayoutChanged;
+                    if (adornedTextView.View.TextViewLines != null)
+                    {
+                        adornedTextView.CreateVisuals();
+                    }
+                    visible = true;
+                }
+            }
+        }
+
+        private void OnOptionChanged(object sender, EditorOptionChangedEventArgs e)
+        {
+            if (e.OptionId != DefaultTextViewOptions.UseVisibleWhitespaceId.Name)
+            {
+                return;
+            }
+
+            Visible = options.IsVisibleWhitespaceEnabled();
         }
 
         private void ReadWhitespaceBrushSetting()
         {
             var visibleWhitespace = formatMap.GetProperties("Visible Whitespace");
-            whitespaceBrush = (Brush)visibleWhitespace[EditorFormatDefinition.ForegroundBrushId];
+            adornedTextView.WhitespaceBrush = (Brush)visibleWhitespace[EditorFormatDefinition.ForegroundBrushId];
         }
 
         private void FormatMapOnFormatMappingChanged(object sender, FormatItemsEventArgs e)
@@ -54,12 +99,16 @@ namespace EndOfTheLine
             }
 
             ReadWhitespaceBrushSetting();
-            
-            // Recreate adornments for all lines in the view.
-            foreach (var line in view.TextViewLines)
+
+            if (!Visible)
             {
-                CreateVisuals(line);
+                return;
             }
+
+            adornedTextView.RemoveAllAdornments();
+
+            // Recreate adornments for all lines in the view.
+            adornedTextView.CreateVisuals();
         }
 
         /// <summary>
@@ -67,94 +116,47 @@ namespace EndOfTheLine
         /// </summary>
         private void OnLayoutChanged(object sender, TextViewLayoutChangedEventArgs e)
         {
-            foreach (var line in e.NewOrReformattedLines)
+            if (!visible)
             {
-                CreateVisuals(line);
+                return;
+            }
+
+            RefreshAdornments(adornedTextView, e.NewOrReformattedLines);
+        }
+
+        /// <summary>
+        /// Refresh the adornments of the view based on line
+        /// information from a view layout changed event.
+        /// </summary>
+        /// <typeparam name="TLine">The type representing lines in the view.</typeparam>
+        /// <param name="adornmentView">The view to refresh adornments in.</param>
+        /// <param name="changedLines">
+        /// The lines that have changed according to a view layout changed
+        /// event.</param>
+        internal static void RefreshAdornments<TLine>(
+            IAdornedTextView<TLine> adornmentView, 
+            IReadOnlyList<TLine> changedLines) where TLine : class
+        {
+            foreach (var line in changedLines)
+            {
+                adornmentView.AddAdornmentToLine(line);
             }
 
             // When pressing enter on an empty line VS2013 removes the
             // adornment of the empty line, but only sends the newly
             // created line below in e.NewOrReformattedLines
 
-            if (e.NewOrReformattedLines.Count == 0)
+            if (changedLines.Count == 0)
             {
                 return;
             }
-
-            var aboveLine = GetLineAbove(e.NewOrReformattedLines[0]);
+            
+            var aboveLine = ListItems.PreviousItemOrDefault(adornmentView.Lines, changedLines[0]);
             if (aboveLine != null)
             {
-                CreateVisuals(aboveLine);
+                adornmentView.ClearAdornmentsFromLine(aboveLine);
+                adornmentView.AddAdornmentToLine(aboveLine);
             }
-        }
-
-        private ITextViewLine GetLineAbove(ITextViewLine first)
-        {
-            return ListItems.PreviousItemOrDefault(view.TextViewLines, first);
-        }
-
-        /// <summary>
-        /// Within the given line add the scarlet box behind the a
-        /// </summary>
-        private void CreateVisuals(ITextViewLine line)
-        {
-            var lineBreak = new SnapshotSpan(view.TextSnapshot, Span.FromBounds(line.End, line.EndIncludingLineBreak));
-            var markerGeom = view.TextViewLines.GetMarkerGeometry(lineBreak);
-            if (markerGeom == null)
-            {
-                return; 
-            }
-
-            var eolLabel = GetEolLabel(lineBreak.GetText());
-
-            var textProp = view.FormattedLineSource.DefaultTextProperties;
-            var typeface = textProp.Typeface;
-
-            var textBlock = new TextBlock
-            {
-                Text = eolLabel,
-                FontFamily = typeface.FontFamily,
-                FontSize = textProp.FontRenderingEmSize,
-                FontWeight = typeface.Weight,
-                FontStretch = typeface.Stretch,
-                FontStyle = typeface.Style,
-                Foreground = whitespaceBrush
-            };
-
-            UIElement adornment = textBlock;
-
-            Canvas.SetLeft(adornment, markerGeom.Bounds.Left);
-            Canvas.SetTop(adornment, markerGeom.Bounds.Top);
-
-            // Normally previous adornments are automatically removed when
-            // lines are reformatted. However, we are applying new updated
-            // adornments when the font settings change. In this case the
-            // old adornments remain, and must be removed.
-            layer.RemoveAdornmentsByVisualSpan(lineBreak);
-
-            layer.AddAdornment(AdornmentPositioningBehavior.TextRelative, lineBreak, null, adornment, null);
-        }
-
-        private static string GetEolLabel(string lineBreakText)
-        {
-            var sb = new StringBuilder();
-            foreach (var c in lineBreakText)
-            {
-                switch (c)
-                {
-                    case '\r':
-                        sb.Append("¤");
-                        break;
-                    case '\n':
-                        sb.Append("¶");
-                        break;
-                    default:
-                        sb.Append("<" + (int) c + ">");
-                        break;
-                }
-            }
-
-            return sb.ToString();
         }
     }
 }

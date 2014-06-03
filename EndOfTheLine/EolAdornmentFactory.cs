@@ -31,11 +31,14 @@ namespace EndOfTheLine
         /// </param>
         public void TextViewCreated(IWpfTextView textView)
         {
-            var adornment = new EolAdornment(textView, FormatMapService);
-            textView.Closed += (sender, args) => adornment.Close();
+            var options = EditorOptionsFactoryService.GetOptions(textView);
+            EolAdornment.Attach(textView, options, FormatMapService);
         }
 
         [Import]
-        internal IEditorFormatMapService FormatMapService = null;
+        internal IEditorFormatMapService FormatMapService;
+
+        [Import]
+        internal IEditorOptionsFactoryService EditorOptionsFactoryService;
     }
 }
