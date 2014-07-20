@@ -5,7 +5,7 @@
     <DisplayName>End of the Line</DisplayName>
     <Description xml:space="preserve">Shows end of line markers in text editor allowing users to differentiate between CRLF and LF line endings.</Description>
     <MoreInfo>https://bitbucket.org/rolfwr/endoftheline</MoreInfo>
-    <License>license.txt</License>
+    <License>license.rtf</License>
     <Icon>Eol-icon.png</Icon>
     <PreviewImage>Eol-preview.png</PreviewImage>
     <Tags>EOL, End of line, Line endings, CR, LF, CRLF, Unix </Tags>
