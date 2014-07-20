@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="EndOfTheLine..44e069cf-8802-4347-bbad-5e48b881efe0" Version="1.0" Language="en-US" Publisher="Rolf W. Rasmussen" />
+    <Identity Id="EndOfTheLine..44e069cf-8802-4347-bbad-5e48b881efe0" Version="1.1" Language="en-US" Publisher="Rolf W. Rasmussen" />
     <DisplayName>End of the Line</DisplayName>
     <Description xml:space="preserve">Shows end of line markers in text editor allowing users to differentiate between CRLF and LF line endings.</Description>
     <MoreInfo>https://bitbucket.org/rolfwr/endoftheline</MoreInfo>

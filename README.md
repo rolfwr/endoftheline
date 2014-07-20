@@ -28,7 +28,29 @@ gets introduced is:
 * Copying and pasting code from a file with different line endings.
 * Using Visual Studio extensions that always assumes CRLF endings to reformat regions of code.
 
+End of the Line 1.1
+-------------------
+
+Features:
+* Only show EOL markers when show whitespace is active.
+* Support VS2012 in addition to VS2013.
+
+Bug fixes:
+* EOL marker on first view line vanished when editing second line.
+
+End of The Line 1.0
+-------------------
+
+* Initial release
+
 License
-----
+-------
 
 MIT
+
+Authors
+-------
+
+Contributors in the order of first contribution
+* [Rolf W. Rasmussen](https://bitbucket.org/rolfwr)
+* [Matt Ellis](https://bitbucket.org/citizenmatt)
