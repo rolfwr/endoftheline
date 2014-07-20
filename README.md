@@ -55,5 +55,6 @@ Authors
 -------
 
 Contributors in the order of first contribution
+
 * [Rolf W. Rasmussen](https://bitbucket.org/rolfwr)
 * [Matt Ellis](https://bitbucket.org/citizenmatt)
