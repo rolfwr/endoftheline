@@ -22,7 +22,7 @@ Have you ever wondered why Visual Studio starts showing the
 _Inconsistent Line Endings_ when you open a file, even though you've only ever
 used Visual Studio to edit the file? Detecting where these inconsistent line
 endings originate from is a lot easier when you're able to see the line
-endings while editing the file. Common ways in which inconsisten line endings
+endings while editing the file. Common ways in which inconsistent line endings
 gets introduced is:
 
 * Copying and pasting code from a file with different line endings.
