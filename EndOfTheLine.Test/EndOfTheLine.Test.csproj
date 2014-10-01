@@ -63,7 +63,9 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
@@ -77,9 +79,7 @@
   <Target Name="BeforeBuild">
   </Target>
   -->
-  <UsingTask
-    AssemblyFile="..\packages\xunit.runners.2.0.0-beta-build2700\tools\xunit.runner.msbuild.dll"
-    TaskName="Xunit.Runner.MSBuild.xunit" />
+  <UsingTask AssemblyFile="..\packages\xunit.runners.2.0.0-beta-build2700\tools\xunit.runner.msbuild.dll" TaskName="Xunit.Runner.MSBuild.xunit" />
   <ItemGroup>
     <TestAssemblies Include="$(OutputPath)\$(AssemblyName).dll" />
   </ItemGroup>

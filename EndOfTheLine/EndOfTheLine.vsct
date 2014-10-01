@@ -1,0 +1,172 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<!--
+    This file defines additional Visual studio menu items.
+  
+    About .vsct files:
+    http://msdn.microsoft.com/en-us/library/bb164699.aspx
+
+    This file uses the following build rule in the .csproj file:
+
+    <ItemGroup>
+        <VSCTCompile Include="EndOfTheLine.vsct">
+            <ResourceName>Menus.ctmenu</ResourceName>
+        </VSCTCompile>
+    </ItemGroup>
+
+    The "Menus.ctmenu" resource name is referenced by the VSPackage class
+    using the ProvideMenuResource annotation attribute.
+
+    In the visual studio property view this shows up as having the build action "CTCompile".
+
+    A strange quirk with Visual Studio project loading is that the whole
+    project can fail to load if this file lacks the root level CommandTable element.
+    
+    This file is run through the C++ preprocessor to replace substitute in
+    definitions from the following headers:
+-->
+
+  <Extern href="stdidcmd.h"/>
+  <Extern href="vsshlids.h"/>
+
+
+  <!--
+    The Commands element defines commands, menus and menu groups.
+    The guidEndOfTheLinePkg GUID identify the package that provides the
+    command defined inside it. The actual GUID value is defined at
+    /CommandTable/Symbols/GuidSymbol[@name="guidEndOfTheLinePkg"]/@value
+    in this document. See that location for further notes on how the GUID
+    value is used elsewhere in the project.
+  -->
+  <Commands package="guidEndOfTheLinePkg">
+
+    <!-- Menu items that the user can invoke. -->
+    <Buttons>
+
+      <!--
+        The GUI will sort buttons acending priority order when displaying
+        buttons in the menus.
+        
+        The priority value 0x8000 makes the commands we define here show up
+        below the default commands on the Edit:Advanced menu, but allows other
+        extensions to define that they want to be placed either above or below
+        the commands we add.
+        
+        guidEndOfTheLineCmdSet is defined at /CommandTable/Symbols/GuidSymbol[@name="guidEndOfTheLineCmdSet"]/@value
+        
+        cmdidMakeLineEndingsCrLf is defined at /CommandTable/Symbols/GuidSymbol[@name="guidEndOfTheLineCmdSet"]/IDSymbol[@name="cmdidMakeLineEndingsCrLf"
+      -->
+      <Button guid="guidEndOfTheLineCmdSet" id="cmdidMakeLineEndingsCrLf" priority="0x8000" type="Button">
+        <!-- The IDG_VS_EDITOR_ADVANCED_CMDS constant refers to the standard Edit:Advanced submenu. -->
+        <Parent guid="guidStdEditor" id="IDG_VS_EDITOR_ADVANCED_CMDS"/>
+
+        <!-- 
+          guidImages is defined at /CommandTable/Symbols/GuidSymbol[@name="guidImages"]/@value
+
+          bmpCrLf is defined at /CommandTable/Symbols/GuidSymbol[@name="guidImages"]/IDSymbol[name="bmpCrLf"]/@value
+
+          Icon texture atlas is defined at /CommandTable/Bitmaps/Bitmap[@guid="guidImages"]
+        -->
+        <Icon guid="guidImages" id="bmpCrLf" />
+        <Strings>
+          <!--
+              CommandName is displayed to user in Tools > Customize... > Commands.
+              ButtonTest is displayed to user in menu item.
+          -->
+          <CommandName>Make line endings CR LF </CommandName>
+          <ButtonText>Make line endings CR LF</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidEndOfTheLineCmdSet" id="cmdidMakeLineEndingsLf" priority="0x8000" type="Button">
+        <Parent guid="guidStdEditor" id="IDG_VS_EDITOR_ADVANCED_CMDS"/>
+        <Icon guid="guidImages" id="bmpLf" />
+        <Strings>
+          <CommandName>Make line endings LF </CommandName>
+          <ButtonText>Make line endings LF</ButtonText>
+        </Strings>
+      </Button>
+    </Buttons>
+
+    <!-- Contains the bitmap used for menu command icons. -->
+    <Bitmaps>
+      <!--
+        References an image that is used like a texture atlas (or like a CSS
+        sprint image if you like) that contains a strip of all the images used by
+        the menu commands. Each icon is 16x16 pixels, and @usedList names each
+        icon in the strip from left to right. These icon names are referred to in
+        /CommandTable/Commands/Buttons/Button/Icon/@id
+      -->
+      <Bitmap guid="guidImages" href="Resources\Images.png" usedList="bmpCrLf, bmpLf"/>
+    </Bitmaps>
+  </Commands>
+
+  <KeyBindings>
+    <!-- 
+      Keybindings.
+        
+      "guid" and "id" attributes refer to definitions at
+      /CommandTable/Symbols and indirectly to the button definitions above that
+      refer to the same "guid" and "id" definitions.
+    -->
+    <KeyBinding guid="guidEndOfTheLineCmdSet" id="cmdidMakeLineEndingsCrLf" key1="R" mod1="Control" key2="C" mod2="Control" editor="guidVSStd97"/>
+    <KeyBinding guid="guidEndOfTheLineCmdSet" id="cmdidMakeLineEndingsLf" key1="R" mod1="Control" key2="L" mod2="Control" editor="guidVSStd97"/>
+  </KeyBindings>
+
+  <Symbols>
+    <!--
+      Identity of the whole Visual Studio package.
+
+      Name is referenced by /CommandTable/Commands/@package
+
+      Guid value matches /PackageManifest/MetaData/Identity/@Id of the source.extension.vsixmanfiest file.
+
+      Guid value matches the field EndOfTheLine.Guids.guidEndOfTheLinePkgString.
+      
+      The Package class is annotated with a Guid attribute with the GUID value from this field.
+      
+    -->
+    <GuidSymbol name="guidEndOfTheLinePkg" value="{44e069cf-8802-4347-bbad-5e48b881efe0}" />
+    
+    <!--
+      Identity of the group of commands we place all our commands under.
+
+      Name is referenced by //Button/@guid and //KeyBinding/@guid
+
+      Guid value matches the field EndOfTheLine.Guids.guidTryAddMenuItemCmdSetString.
+
+      Guid value matches the field EndOfTheLine.Guids.guidTryAddMenuItemCmdSet.
+
+      This field is used when calling IMenuCommandService.AddCommand() from the initialization code of the VS Package class.
+    -->
+    <GuidSymbol name="guidEndOfTheLineCmdSet" value="{e22c45ad-8059-460f-bee4-2c55f964781a}">
+      <!--
+        Numeric command identifiers.
+
+        Name attributes are referenced by //Button/@id and //KeyBinding/@id
+
+        These definitions match the constants defined in PkgCmdID.cs
+
+        These numberic command identifiers match the ID property of the
+        CommandID objects that are passed in when calling
+        IMenuCommandService.AddCommand() from the initialization code of the
+        VS Package class.
+      -->
+      <IDSymbol name="cmdidMakeLineEndingsCrLf" value="0x0100" />
+      <IDSymbol name="cmdidMakeLineEndingsLf" value="0x0101" />
+    </GuidSymbol>
+
+    <!--
+      Identity of the image containing the icon texture atlas.
+
+      Name is refrenced by /CommandTable/Buttons/Button/Icon/@guid and
+      /CommandTable/Bitmaps/Bitmap/@guid
+    -->
+    <GuidSymbol name="guidImages" value="{1e39d489-9a62-40d7-b67f-eabf90ddb200}" >
+      <IDSymbol name="bmpCrLf" value="1" />
+      <IDSymbol name="bmpLf" value="2" />
+    </GuidSymbol>
+  </Symbols>
+  
+
+</CommandTable>
