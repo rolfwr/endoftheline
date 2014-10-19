@@ -15,6 +15,10 @@ as Visual Studio displays spaces and tabs in.
 After installing the extension be sure to enable "View White Space" (Ctrl+R,
 Ctrl+W) to see the end of line markers in the text editor.
 
+You can use Edit ▸ Advanced ▸ Make line endings CR LF (Ctrl+R, Ctrl+C), or
+Edit ▸ Advanced ▸ Make line endings LF (Ctrl+R, Ctrl+L) to change the line
+endings for the document as a whole or for the text selection if any.
+
 Sources of inconsistent line endings
 ------------------------------------
 
@@ -28,6 +32,13 @@ gets introduced is:
 * Copying and pasting code from a file with different line endings.
 * Using Visual Studio extensions that always assumes CRLF endings to reformat
   regions of code.
+
+End of the Line 1.2
+-------------------
+
+Features:
+
+* Editing commands for changing line endings.
 
 End of the Line 1.1
 -------------------
