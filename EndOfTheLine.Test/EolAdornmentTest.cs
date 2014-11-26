@@ -39,6 +39,26 @@ namespace EndOfTheLine.Test
             AssertAllLinesHaveSingleAdornment(lineView);
         }
 
+        [Fact]
+        public void RefreshAfterChangingEndingsOfMultipleRunsOfEmptyLines()
+        {
+            // When Visual studio changes the line endings of multiple runs
+            // of empty lines as a single edit, there may be more than one
+            // leading line that has been omitted from
+            // e.NewOrReformattedLines.
+            var lineView = new AdornedTextViewStub();
+            var changedLines = new List<ViewLineStub>();
+            foreach (int i in new[] {2, 3, 7, 8})
+            {
+                lineView.Lines[i - 1].AdornmentCount = 0;
+                lineView.Lines[i].AdornmentCount = 0;
+                changedLines.Add(lineView.Lines[i]);
+            }
+
+            EolAdornment.RefreshAdornments(lineView, changedLines);
+            AssertAllLinesHaveSingleAdornment(lineView);
+        }
+
         private static void AssertAllLinesHaveSingleAdornment(IAdornedTextView<ViewLineStub> adornedTextView)
         {
             Action<ViewLineStub> lineMustHaveOneAdornment =

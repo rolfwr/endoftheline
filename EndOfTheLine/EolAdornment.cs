@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Windows;
 using System.Windows.Media;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Editor;
@@ -137,25 +139,31 @@ namespace EndOfTheLine
             IAdornedTextView<TLine> adornmentView, 
             IReadOnlyList<TLine> changedLines) where TLine : class
         {
+            // VS2013 and VS2015 Preview under certain circumstances leave
+            // out the first line in runs of lines affected by changes.
+            //
+            // For example when pressing enter on an empty line it removes
+            // the adornment of the empty line, but only sends the newly
+            // created line below in e.NewOrReformattedLines.
+            //
+            // A single call to OnLayoutChanged can contain multiple runs
+            // of affected lines, and each run may be missing a first line
+            // which have been stripped of its previous adornments.
+
             foreach (var line in changedLines)
             {
                 adornmentView.AddAdornmentToLine(line);
             }
 
-            // When pressing enter on an empty line VS2013 removes the
-            // adornment of the empty line, but only sends the newly
-            // created line below in e.NewOrReformattedLines
+            var uncertainLinesAbove =
+                changedLines.Select(line => ListItems.PreviousItemOrDefault(adornmentView.Lines, line))
+                    .Except(changedLines)
+                    .Where(line => line != null);
 
-            if (changedLines.Count == 0)
+            foreach (var line in uncertainLinesAbove)
             {
-                return;
-            }
-            
-            var aboveLine = ListItems.PreviousItemOrDefault(adornmentView.Lines, changedLines[0]);
-            if (aboveLine != null)
-            {
-                adornmentView.ClearAdornmentsFromLine(aboveLine);
-                adornmentView.AddAdornmentToLine(aboveLine);
+                adornmentView.ClearAdornmentsFromLine(line);
+                adornmentView.AddAdornmentToLine(line);
             }
         }
     }
