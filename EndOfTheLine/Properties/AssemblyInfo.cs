@@ -9,6 +9,6 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyProduct("End of the Line")]
 [assembly: AssemblyCopyright("Copyright 2014 Rolf W. Rasmussen (MIT)")]
 [assembly: ComVisible(false)]
-[assembly: AssemblyVersion("1.2.0.0")]
-[assembly: AssemblyFileVersion("1.2.0.0")]
+[assembly: AssemblyVersion("1.3.0.0")]
+[assembly: AssemblyFileVersion("1.3.0.0")]
 [assembly: InternalsVisibleTo("EndOfTheLine.Test")]

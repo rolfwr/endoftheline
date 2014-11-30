@@ -2,7 +2,7 @@
 ===============
 
 _End of the Line_ is a Visual Studio extension that shows end of line markers
-in text editor allowing users to differentiate between CRLF and LF line
+in text editor allowing users to differentiate between CR LF and LF line
 endings.
 
 Visual Studio provides the Edit ▸ Advanced ▸ View White Space (Ctrl+R, Ctrl+W)
@@ -19,6 +19,12 @@ You can use Edit ▸ Advanced ▸ Make line endings CR LF (Ctrl+R, Ctrl+C), or
 Edit ▸ Advanced ▸ Make line endings LF (Ctrl+R, Ctrl+L) to change the line
 endings for the document as a whole or for the text selection if any.
 
+Links
+-----
+
+* [Source code on Bitbucket](https://bitbucket.org/rolfwr/endoftheline)
+* [Extension gallery download](https://visualstudiogallery.msdn.microsoft.com/545e56a7-98d7-47f9-9d84-4681f2903060)
+
 Sources of inconsistent line endings
 ------------------------------------
 
@@ -30,18 +36,29 @@ endings while editing the file. Common ways in which inconsistent line endings
 gets introduced is:
 
 * Copying and pasting code from a file with different line endings.
-* Using Visual Studio extensions that always assumes CRLF endings to reformat
+* Using Visual Studio extensions that always assumes CR LF endings to reformat
   regions of code.
 
-End of the Line 1.2
--------------------
+Release history
+---------------
+
+### End of the line 1.3
+
+Features:
+
+* Support VS2015 (14.0).
+
+Bug fixes:
+
+* EOL markers sometimes vanished when part of compound editing operation.
+
+### End of the Line 1.2
 
 Features:
 
 * Editing commands for changing line endings.
 
-End of the Line 1.1
--------------------
+### End of the Line 1.1
 
 Features:
 
@@ -52,15 +69,14 @@ Bug fixes:
 
 * EOL marker on first view line vanished when editing second line.
 
-End of The Line 1.0
--------------------
+### End of The Line 1.0
 
 * Initial release
 
 License
 -------
 
-MIT
+[MIT](https://bitbucket.org/rolfwr/endoftheline/raw/default/EndOfTheLine/license.txt)
 
 Authors
 -------
