@@ -84,6 +84,12 @@ namespace EndOfTheLine
                 return string.Empty;
             }
 
+            SymbolSet symbols = SymbolSet.GetSymbolSet(eolOptions.Style);
+            if (lineBreakText == "\r\n")
+            {
+                return symbols.CrLf;
+            }
+
             var sb = new StringBuilder();
 
             foreach (var c in lineBreakText)
@@ -91,10 +97,10 @@ namespace EndOfTheLine
                 switch (c)
                 {
                     case '\r':
-                        sb.Append("¤");
+                        sb.Append(symbols.Cr);
                         break;
                     case '\n':
-                        sb.Append("¶");
+                        sb.Append(symbols.Lf);
                         break;
                     default:
                         sb.Append("<" + (int) c + ">");
@@ -126,6 +132,36 @@ namespace EndOfTheLine
         internal void RemoveAllAdornments()
         {
             layer.RemoveAllAdornments();
+        }
+
+        private class SymbolSet
+        {
+            static readonly SymbolSet EclipseStyle = new SymbolSet("¤¶", "¤", "¶");
+            static readonly SymbolSet TortoiseGitMergeStyle = new SymbolSet("↲", "←", "↓");
+
+            internal readonly string CrLf;
+            internal readonly string Cr;
+            internal readonly string Lf;
+
+            private SymbolSet(string crLf, string cr, string lf)
+            {
+                CrLf = crLf;
+                Cr = cr;
+                Lf = lf;
+            }
+
+            internal static SymbolSet GetSymbolSet(EndingRepresentationStyle style)
+            {
+                switch (style)
+                {
+                    case EndingRepresentationStyle.Eclipse:
+                        return EclipseStyle;
+                    case EndingRepresentationStyle.TortoiseGitMerge:
+                        return TortoiseGitMergeStyle;
+                    default:
+                        return EclipseStyle;
+                }
+            }
         }
     }
 }

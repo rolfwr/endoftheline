@@ -10,6 +10,7 @@ namespace EndOfTheLine
     public class EolOptionPage : DialogPage, IEolOptions
     {
         public VisibilityPolicy Visibility { get; set; }
+        public EndingRepresentationStyle Style { get; set; }
         public bool WhenCrlf { get; set; }
         public bool WhenLf { get; set; }
         public bool WhenOther { get; set; }
