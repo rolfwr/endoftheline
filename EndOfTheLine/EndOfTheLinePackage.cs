@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using System;
+
 namespace EndOfTheLine
 {
     // Make the CreatePkgDef.exe recognize this class as a Visual Studio
@@ -24,6 +25,14 @@ namespace EndOfTheLine
     // /CommandTable/Symbols/GuidSymbol[@name="guidEndOfTheLinePkg"]/@value
     // in the EndOfTheLine.vsct file.
     [Guid(Guids.GuidEndOfTheLinePkgString)]
+
+    // Make our option page UI available.
+    // By specifying that we support automation the IDE will persist the
+    // page's state.
+    [ProvideOptionPage(typeof(EolOptionPage), "End of the Line", "Visibility", 0, 0, true)]
+
+    // Ensure that the package gets loaded somebody is requesting our options.
+    [ProvideService(typeof(IEolOptions))]
     public sealed class EndOfTheLinePackage : Package
     {
         protected override void Initialize()
@@ -39,6 +48,10 @@ namespace EndOfTheLine
 
             AddCommandForMenuItem(mcs, CommandIds.CmdidMakeLineEndingsCrLf, MakeLineEndingsCrLf);
             AddCommandForMenuItem(mcs, CommandIds.CmdidMakeLineEndingsLf, MakeLineEndingsLf);
+
+            // Fulfill the promise made by the "ProvideService" attribute.
+            IServiceContainer services = this;
+            services.AddService(typeof(IEolOptions), delegate { return GetDialogPage(typeof (EolOptionPage)); }, promote: true);
         }
 
         private static void AddCommandForMenuItem(IMenuCommandService mcs, uint cmdid, EventHandler handler)
@@ -60,22 +73,10 @@ namespace EndOfTheLine
         private TextDocument GetActiveTextDocument()
         {
             var dte = (DTE)GetService(typeof(DTE));
-
-            if (dte == null)
-            {
-                return null;
-            }
-
-            var doc = dte.ActiveDocument;
-
-            if (doc == null)
-            {
-                return null;
-            }
+            var doc = dte?.ActiveDocument;
 
             // The only valid data model type identifiers are "Document" and "TextDocument".
-            return doc.Object("TextDocument") as TextDocument;
-
+            return doc?.Object("TextDocument") as TextDocument;
         }
     }
 }

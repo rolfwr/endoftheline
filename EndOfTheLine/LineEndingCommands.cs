@@ -92,12 +92,7 @@ namespace EndOfTheLine
 
         internal static void ReplaceLineEndingsInActiveDocument(TextDocument textDoc, string newLineEnding)
         {
-            if (textDoc == null)
-            {
-                return;
-            }
-
-            var selection = textDoc.Selection;
+            var selection = textDoc?.Selection;
             if (selection == null)
             {
                 return;

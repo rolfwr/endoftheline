@@ -1,9 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>
-    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
+    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">14.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>12.0</OldToolsVersion>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -105,6 +110,7 @@
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="stdole">
@@ -119,15 +125,24 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EndOfTheLinePackage.cs" />
+    <Compile Include="EnumBooleanConverter.cs" />
     <Compile Include="EolAdornedTextView.cs" />
     <Compile Include="EolAdornmentFactory.cs" />
     <Compile Include="Guids.cs" />
     <Compile Include="IAdornedTextView.cs" />
+    <Compile Include="IEolOptions.cs" />
     <Compile Include="LineEndingCommands.cs" />
     <Compile Include="ListItems.cs" />
     <Compile Include="CommandIds.cs" />
+    <Compile Include="EolOptionPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="EolAdornment.cs" />
+    <Compile Include="EolOptionsUI.xaml.cs">
+      <DependentUpon>EolOptionsUI.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="VisibilityPolicy.cs" />
   </ItemGroup>
   <ItemGroup>
     <VSCTCompile Include="EndOfTheLine.vsct">
@@ -173,6 +188,15 @@
       <ManifestResourceName>VSPackage</ManifestResourceName>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="EolOptionsUI.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <PropertyGroup>
     <UseCodebase>true</UseCodebase>

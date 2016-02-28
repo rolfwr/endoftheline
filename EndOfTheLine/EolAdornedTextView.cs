@@ -15,41 +15,31 @@ namespace EndOfTheLine
     public class EolAdornedTextView : IAdornedTextView<ITextViewLine>
     {
         private readonly IAdornmentLayer layer;
-        private readonly IWpfTextView view;
-        private Brush whitespaceBrush;
+        private readonly IEolOptions eolOptions;
 
-        public EolAdornedTextView(IWpfTextView view, IAdornmentLayer layer)
+        public EolAdornedTextView(IWpfTextView view, IAdornmentLayer layer, IEolOptions eolOptions)
         {
-            this.view = view;
+            View = view;
             this.layer = layer;
+            this.eolOptions = eolOptions;
         }
 
-        public IWpfTextView View
-        {
-            get { return view; }
-        }
+        public IWpfTextView View { get; }
 
-        public Brush WhitespaceBrush
-        {
-            set { whitespaceBrush = value; }
-            get { return whitespaceBrush; }
-        }
+        public Brush WhitespaceBrush { set; get; }
 
-        public IList<ITextViewLine> Lines
-        {
-            get { return view.TextViewLines; }
-        }
+        public IList<ITextViewLine> Lines => View.TextViewLines;
 
         public void ClearAdornmentsFromLine(ITextViewLine line)
         {
-            var lineBreak = new SnapshotSpan(view.TextSnapshot, Span.FromBounds(line.End, line.EndIncludingLineBreak));
+            var lineBreak = new SnapshotSpan(View.TextSnapshot, Span.FromBounds(line.End, line.EndIncludingLineBreak));
             layer.RemoveAdornmentsByVisualSpan(lineBreak);
         }
 
         public void AddAdornmentToLine(ITextViewLine line)
         {
-            var lineBreak = new SnapshotSpan(view.TextSnapshot, Span.FromBounds(line.End, line.EndIncludingLineBreak));
-            var markerGeom = view.TextViewLines.GetMarkerGeometry(lineBreak);
+            var lineBreak = new SnapshotSpan(View.TextSnapshot, Span.FromBounds(line.End, line.EndIncludingLineBreak));
+            var markerGeom = View.TextViewLines.GetMarkerGeometry(lineBreak);
             if (markerGeom == null)
             {
                 return; 
@@ -57,7 +47,7 @@ namespace EndOfTheLine
 
             var eolLabel = GetEolLabel(lineBreak.GetText());
 
-            var textProp = view.FormattedLineSource.DefaultTextProperties;
+            var textProp = View.FormattedLineSource.DefaultTextProperties;
             var typeface = textProp.Typeface;
 
             var textBlock = new TextBlock
@@ -68,7 +58,7 @@ namespace EndOfTheLine
                 FontWeight = typeface.Weight,
                 FontStretch = typeface.Stretch,
                 FontStyle = typeface.Style,
-                Foreground = whitespaceBrush
+                Foreground = WhitespaceBrush
             };
 
             UIElement adornment = textBlock;
@@ -81,15 +71,21 @@ namespace EndOfTheLine
 
         public void CreateVisuals()
         {
-            foreach (var line in view.TextViewLines)
+            foreach (var line in View.TextViewLines)
             {
                 AddAdornmentToLine(line);
             }
         }
 
-        private static string GetEolLabel(string lineBreakText)
+        private string GetEolLabel(string lineBreakText)
         {
+            if (!ShouldShowEnding(lineBreakText))
+            {
+                return string.Empty;
+            }
+
             var sb = new StringBuilder();
+
             foreach (var c in lineBreakText)
             {
                 switch (c)
@@ -107,6 +103,24 @@ namespace EndOfTheLine
             }
 
             return sb.ToString();
+        }
+
+        private bool ShouldShowEnding(string lineBreakText)
+        {
+            if (eolOptions.Visibility != VisibilityPolicy.WhenEndingIs)
+            {
+                return true;
+            }
+
+            switch (lineBreakText)
+            {
+                case "\r\n":
+                    return eolOptions.WhenCrlf;
+                case "\n":
+                    return eolOptions.WhenLf;
+                default:
+                    return eolOptions.WhenOther;
+            }
         }
 
         internal void RemoveAllAdornments()
