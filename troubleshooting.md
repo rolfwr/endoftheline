@@ -15,6 +15,14 @@ icon next to the “View Whitespace” menu item that look like “a·b” is
 highlighted and has a border around it. Note that the Edit ▸ Advanced only
 show up when you are editing a text file of some sort in Visual Studio.
 
+### Check End of the Line Options
+Make sure the “Line endings visible” option is not set to “Never”. The default
+setting is to display line endings when other whitespace is visible, however it
+it is possible to set this option to never show any line endings. To verify
+that this option has the default setting, go look at Tools ▸ Options... ▸
+End of the Line ▸ Line endings visible. The “When other whitespace is visible”
+option should be active.
+
 ### Check color theme and color settings
 Make sure that the Visual Studio color theme and color settings assign a color
 to the display item “Visible White Space” that differs from the background

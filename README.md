@@ -13,7 +13,11 @@ it will CR and LF characters as ¤ and ¶ respectively using the same font style
 as Visual Studio displays spaces and tabs in.
 
 After installing the extension be sure to enable "View White Space" (Ctrl+R,
-Ctrl+W) to see the end of line markers in the text editor.
+Ctrl+W) to see the end of line markers in the text editor or specify when you
+wish line endings to be visible in Tools ▸ Options... ▸ End of the Line. If
+you encounter any difficulties take a look at the
+[troubleshooting guide](https://bitbucket.org/rolfwr/endoftheline/src/default/troubleshooting.md).
+
 
 You can use Edit ▸ Advanced ▸ Make line endings CR LF (Ctrl+R, Ctrl+C), or
 Edit ▸ Advanced ▸ Make line endings LF (Ctrl+R, Ctrl+L) to change the line
@@ -41,6 +45,13 @@ gets introduced is:
 
 Release history
 ---------------
+
+### End of the line 1.4
+
+Features:
+
+* Add Options page for configuring visibility policy and line ending
+  representation.
 
 ### End of the line 1.3
 
@@ -85,3 +96,50 @@ Contributors in the order of first contribution
 
 * [Rolf W. Rasmussen](https://bitbucket.org/rolfwr)
 * [Matt Ellis](https://bitbucket.org/citizenmatt)
+
+Useful tools and tricks
+-----------------------
+
+### Using text search to find inconsistent line endings
+
+If you just want to locate places where files change from one line ending type
+to another, or you want to quickly check all the files in the whole solution,
+you can do a text search using the following regular expression:
+
+    \r\n.*[^\r]\n|[^\r]\n.*\r\n
+
+For example, to find the locations of all line ending consistencies in the
+solution, do the following:
+
+1. Press Ctrl+Shift+F (Edit ▸ Find and Replace ▸ Find in Files)
+2. Enter `\r\n.*[^\r]\n|[^\r]\n.*\r\n` into the "Find what:" edit box.
+3. Turn on "Find options" ▸ "Use Regular Expressions".
+4. Press the "Find All" button.
+
+This will give you a find results window containing something like this:
+
+    Find all "\r\n.*[^\r]\n|[^\r]\n.*\r\n", Regular expressions, Subfolders, Find Results 1, Entire Solution, ""
+      C:\...\ConsoleApplication1\Other.cs(1):using System;
+      C:\...\ConsoleApplication1\Other.cs(2):using System.Collections.Generic;
+      C:\...\ConsoleApplication1\Program.cs(9):    class Program
+      C:\...\Program.cs(11):        static void Main(string[] args)
+      Matching lines: 4    Matching files: 2    Total files searched: 4
+
+You can also use the same regular expression to find inconsistencies within a
+single file.
+
+### Change line endings automatically when saving files
+
+Here are two Visual Studio extensions that provide the ability to change line
+endings on the fly when saving files:
+
+1. Strip'em
+    * [Project page](http://www.grebulon.com/software/stripem.php)
+    * [Source code](http://www.grebulon.com/software/stripem.php#download)
+2. Editor Config
+    * [Project page](http://editorconfig.org/)
+    * [Source code](https://github.com/editorconfig/editorconfig-visualstudio)
+    * [Extension gallery page](https://visualstudiogallery.msdn.microsoft.com/c8bccfe2-650c-4b42-bc5c-845e21f96328)
+
+I (Rolf) have used Editor Config myself in the past to keep source code trees
+consistent across different platforms. I have no experience with Strip'em.

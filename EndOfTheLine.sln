@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BAA9746E-DCA3-4FD4-9994-C656B7CA7D10}"
 	ProjectSection(SolutionItems) = preProject
@@ -22,6 +22,11 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EndOfTheLine.Test", "EndOfTheLine.Test\EndOfTheLine.Test.csproj", "{C59ECD64-7DA7-46C3-AA51-1E02307BDD32}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PreparePackaging", "PreparePackaging\PreparePackaging.csproj", "{DC17CA2B-FF33-4385-B2FE-DA4FBA5A3849}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{CEFEF5B7-98EC-4DDC-BECB-6005E1926D3E}"
+	ProjectSection(SolutionItems) = preProject
+		docs\developing.md = docs\developing.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,5 +49,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CEFEF5B7-98EC-4DDC-BECB-6005E1926D3E} = {BAA9746E-DCA3-4FD4-9994-C656B7CA7D10}
 	EndGlobalSection
 EndGlobal

@@ -13,7 +13,7 @@ namespace EndOfTheLine
     [PackageRegistration(UseManagedResourcesOnly = true)]
     // Provide information to show in Help/About dialog box.
     // The numeric identifiers refer to resources defined in VSPacakge.resx.
-    [InstalledProductRegistration("#110", "#112", "1.3", IconResourceID = 400)]
+    [InstalledProductRegistration("#110", "#112", "1.4", IconResourceID = 400)]
     // Expose menus defined in EndOfTheLine.vsct file to the Visual Studio GUI
     // shell.
     //
