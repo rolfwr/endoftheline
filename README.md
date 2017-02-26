@@ -46,6 +46,12 @@ gets introduced is:
 Release history
 ---------------
 
+### End of the line 1.5 BETA (No release. For VS 2017)
+
+Features:
+
+* Support VS2017 (15.0) (Not tested on older versions of Visual Studio).
+
 ### End of the line 1.4
 
 Features:
