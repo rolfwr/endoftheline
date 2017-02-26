@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="EndOfTheLine..44e069cf-8802-4347-bbad-5e48b881efe0" Version="1.4" Language="en-US" Publisher="Rolf W. Rasmussen" />
+    <Identity Id="EndOfTheLine..44e069cf-8802-4347-bbad-5e48b881efe0" Version="1.5" Language="en-US" Publisher="Rolf W. Rasmussen" />
     <DisplayName>End of the Line</DisplayName>
     <Description xml:space="preserve">Shows end of line markers in text editor allowing users to differentiate between CRLF and LF line endings.</Description>
     <MoreInfo>https://bitbucket.org/rolfwr/endoftheline</MoreInfo>
@@ -11,7 +11,8 @@
     <Tags>EOL, End of line, Line endings, CR, LF, CRLF, Unix </Tags>
   </Metadata>
   <Installation>
-    <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[11.0, 14.0]" />
+      <InstallationTarget Version="[14.0,16.0)" Id="Microsoft.VisualStudio.Community" />
+      <InstallationTarget Version="[11.0,16.0)" Id="Microsoft.VisualStudio.Pro" />
   </Installation>
   <Dependencies>
     <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.0, 4.5]" />
@@ -20,4 +21,7 @@
     <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%|" />
     <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
   </Assets>
+  <Prerequisites>
+    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0.25904.2,16.0)" DisplayName="Visual Studio core editor" />
+  </Prerequisites>
 </PackageManifest>
