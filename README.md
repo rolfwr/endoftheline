@@ -46,6 +46,12 @@ gets introduced is:
 Release history
 ---------------
 
+### Tentative: End of the line 1.5 
+
+Features:
+
+* Support VS2017 (15.0).
+
 ### End of the line 1.4
 
 Features:
@@ -96,6 +102,7 @@ Contributors in the order of first contribution
 
 * [Rolf W. Rasmussen](https://bitbucket.org/rolfwr)
 * [Matt Ellis](https://bitbucket.org/citizenmatt)
+* [Klaus Larsen](https://bitbucket.org/kblarsen)
 
 Useful tools and tricks
 -----------------------
