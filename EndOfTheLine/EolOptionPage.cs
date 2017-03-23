@@ -11,6 +11,7 @@ namespace EndOfTheLine
     {
         public VisibilityPolicy Visibility { get; set; }
         public EndingRepresentationStyle Style { get; set; }
+        public EndingColorStyle Color { get; set; }
         public bool WhenCrlf { get; set; }
         public bool WhenLf { get; set; }
         public bool WhenOther { get; set; }

@@ -26,7 +26,7 @@ namespace EndOfTheLine
 
         public IWpfTextView View { get; }
 
-        public Brush WhitespaceBrush { set; get; }
+        public Brush AdornmentBrush { set; get; }
 
         public IList<ITextViewLine> Lines => View.TextViewLines;
 
@@ -58,7 +58,7 @@ namespace EndOfTheLine
                 FontWeight = typeface.Weight,
                 FontStretch = typeface.Stretch,
                 FontStyle = typeface.Style,
-                Foreground = WhitespaceBrush
+                Foreground = AdornmentBrush
             };
 
             UIElement adornment = textBlock;

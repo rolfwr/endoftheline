@@ -37,7 +37,7 @@ namespace EndOfTheLine
 
             formatMap = formatMapService.GetEditorFormatMap(adornedTextView.View);
             formatMap.FormatMappingChanged += FormatMapOnFormatMappingChanged;
-            ReadWhitespaceBrushSetting();
+            ReadAdornmentBrushSetting();
             UpdateAdorningState();
         }
 
@@ -111,17 +111,19 @@ namespace EndOfTheLine
 
         private void OnEolOptionChanged(object sender, EventArgs eventArgs)
         {
+            ReadAdornmentBrushSetting();
             RecreateAdornments();
         }
 
         private void FormatMapOnFormatMappingChanged(object sender, FormatItemsEventArgs e)
         {
-            if (!e.ChangedItems.Contains("Visible Whitespace"))
+            if (!(e.ChangedItems.Contains("Visible Whitespace")
+               || e.ChangedItems.Contains("Error")))
             {
                 return;
             }
 
-            ReadWhitespaceBrushSetting();
+            ReadAdornmentBrushSetting();
             RecreateAdornments();
         }
 
@@ -131,10 +133,19 @@ namespace EndOfTheLine
             UpdateAdorningState();
         }
 
-        private void ReadWhitespaceBrushSetting()
+        private void ReadAdornmentBrushSetting()
         {
-            var visibleWhitespace = formatMap.GetProperties("Visible Whitespace");
-            adornedTextView.WhitespaceBrush = (Brush)visibleWhitespace[EditorFormatDefinition.ForegroundBrushId];
+            switch (eolOptions.Color)
+            {
+            case EndingColorStyle.Whitespace:
+                var visibleWhitespace = formatMap.GetProperties("Visible Whitespace");
+                adornedTextView.AdornmentBrush = (Brush)visibleWhitespace[EditorFormatDefinition.ForegroundBrushId];
+                break;
+            case EndingColorStyle.Error:
+                var error = formatMap.GetProperties("Error");
+                adornedTextView.AdornmentBrush = (Brush)error[EditorFormatDefinition.ForegroundBrushId];
+                break;
+            }
         }
 
         /// <summary>

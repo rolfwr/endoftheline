@@ -25,15 +25,21 @@
         </GroupBox>
         <GroupBox Header="Line ending representation">
             <StackPanel Margin="6,6,0,6">
-                <RadioButton Margin="0,0,0,0" GroupName="SymbolSet" IsChecked="{Binding Path=Style, Converter={StaticResource EnumBooleanConverter}, ConverterParameter={x:Static l:EndingRepresentationStyle.Eclipse}}">
-                    <RadioButton.Content>
-                        <TextBlock>Eclipse style (<Run FontFamily="Consolas">¤¶</Run>, <Run FontFamily="Consolas">¶</Run>, <Run FontFamily="Consolas">¤</Run>)</TextBlock>
-                    </RadioButton.Content>
+                <RadioButton Margin="0,0,0,0" GroupName="SymbolSet" IsChecked="{Binding Style, ConverterParameter={x:Static l:EndingRepresentationStyle.Eclipse}, Converter={StaticResource EnumBooleanConverter}}">
+                    <TextBlock><Run Text="Eclipse style ("/><Run FontFamily="Consolas" Text="¤¶"/><Run Text=", "/><Run FontFamily="Consolas" Text="¶"/><Run Text=", "/><Run FontFamily="Consolas" Text="¤"/><Run Text=")"/></TextBlock>
                 </RadioButton>
-                <RadioButton Margin="0,4,0,0" GroupName="SymbolSet" IsChecked="{Binding Path=Style, Converter={StaticResource EnumBooleanConverter}, ConverterParameter={x:Static l:EndingRepresentationStyle.TortoiseGitMerge}}">
-                    <RadioButton.Content>
-                        <TextBlock>TortoiseGit Merge style (<Run FontFamily="Consolas">↲</Run>, <Run FontFamily="Consolas">↓</Run>, <Run FontFamily="Consolas">←</Run>)</TextBlock>
-                    </RadioButton.Content>
+                <RadioButton Margin="0,4,0,0" GroupName="SymbolSet" IsChecked="{Binding Style, ConverterParameter={x:Static l:EndingRepresentationStyle.TortoiseGitMerge}, Converter={StaticResource EnumBooleanConverter}}">
+                    <TextBlock><Run Text="TortoiseGit Merge style ("/><Run FontFamily="Consolas" Text="↲"/><Run Text=", "/><Run FontFamily="Consolas" Text="↓"/><Run Text=", "/><Run FontFamily="Consolas" Text="←"/><Run Text=")"/></TextBlock>
+                </RadioButton>
+            </StackPanel>
+        </GroupBox>
+        <GroupBox Header="Line ending color">
+            <StackPanel Margin="6,6,0,6">
+                <RadioButton Margin="0,0,0,0" GroupName="ColorSet" IsChecked="{Binding Color, ConverterParameter={x:Static l:EndingColorStyle.Whitespace}, Converter={StaticResource EnumBooleanConverter}}">
+Whitespace
+                </RadioButton>
+                <RadioButton Margin="0,4,0,0" GroupName="ColorSet" IsChecked="{Binding Color, ConverterParameter={x:Static l:EndingColorStyle.Error}, Converter={StaticResource EnumBooleanConverter}}">
+Error
                 </RadioButton>
             </StackPanel>
         </GroupBox>

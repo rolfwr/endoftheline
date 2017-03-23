@@ -6,6 +6,8 @@ namespace EndOfTheLine
     {
         VisibilityPolicy Visibility { get; set; }
         EndingRepresentationStyle Style { get; set; }
+        EndingColorStyle Color { get; set; }
+
         bool WhenCrlf { get; set; }
         bool WhenLf { get; set; }
         bool WhenOther { get; set; }

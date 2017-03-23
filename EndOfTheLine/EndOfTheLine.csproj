@@ -123,7 +123,7 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EndingRepresentationStyle.cs" />
+    <Compile Include="EndingStyle.cs" />
     <Compile Include="EndOfTheLinePackage.cs" />
     <Compile Include="EnumBooleanConverter.cs" />
     <Compile Include="EolAdornedTextView.cs" />
