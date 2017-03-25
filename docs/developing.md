@@ -14,7 +14,7 @@ Debugging
 To run an instance of Visual Studio with the built plugin in the debugger, add
 the following values to the "Debug" page of the EndOfTheLine properties:
 
-* Start external program: `C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\devenv.exe`
+* Start external program: `C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\Common7\IDE\devenv.exe`
 * Command line arguments: `/rootsuffix Exp`
 
 Replace the program path with the path of the devenv.exe executable for the

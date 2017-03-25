@@ -46,11 +46,12 @@ gets introduced is:
 Release history
 ---------------
 
-### Tentative: End of the line 1.5 
+### End of the line 1.5 
 
 Features:
 
 * Support VS2017 (15.0).
+* Support configuring line endings to show up in the color used for errors.
 
 ### End of the line 1.4
 
@@ -103,6 +104,7 @@ Contributors in the order of first contribution
 * [Rolf W. Rasmussen](https://bitbucket.org/rolfwr)
 * [Matt Ellis](https://bitbucket.org/citizenmatt)
 * [Klaus Larsen](https://bitbucket.org/kblarsen)
+* [lexx9999](https://bitbucket.org/lexx9999/)
 
 Useful tools and tricks
 -----------------------
